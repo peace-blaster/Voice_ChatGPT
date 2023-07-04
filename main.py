@@ -1,39 +1,49 @@
+import logging
 import sounddevice as sd
-import google.cloud.speech as gcs
+import numpy as np
+from scipy.io.wavfile import write  
 import openai
-from gtts import gTTS
-from pydub import AudioSegment
-from pydub.playback import play
 
-if __name__ == 'main':
-    # Record audio
+logger = logging.getLogger()
+logging.basicConfig(level=logging.INFO)
+
+try:
+    with open("openai_key", "r") as file:
+        openai.api_key = file.read().strip()
+    logger.info("OpenAI key loaded successfully")
+except Exception as e:
+    logger.error(f"Failed to load OpenAI key: {e}")
+
+def main():
     duration = 10  # seconds
-    recording = sd.rec(int(duration * 44100), samplerate=44100, channels=2)
-    sd.wait()
+    try:
+        logger.info("Recording audio...")
+        recording = sd.rec(int(duration * 44100), samplerate=44100, channels=2)
+        sd.wait()
+        logger.info("Audio recording successful")
+    except Exception as e:
+        logger.error(f"Failed to record audio: {e}")
+        return
 
-    # Save as wav file
-    sd.write('recording.wav', recording, 44100)
+    try:
+        write('recording.wav', 44100, recording)  # use scipy's write instead of sd.write
+        logger.info("Audio file saved successfully")
+    except Exception as e:
+        logger.error(f"Failed to save audio file: {e}")
+        return
 
-    # Use Google Speech-to-Text API to transcribe
-    client = gcs.SpeechClient()
-    audio = gcs.RecognitionAudio(uri="gs://path/to/recording.wav")
-    config = gcs.RecognitionConfig(
-        encoding=gcs.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=44100,
-        language_code="en-US",
-    )
-    response = client.recognize(config=config, audio=audio)
-    transcript = response.results[0].alternatives[0].transcript
+    # Put your Speech-to-Text conversion code here, and assume the resulting text is in the 'text' variable.
 
-    # Use OpenAI API to generate response
-    openai.api_key = 'your-api-key'
-    response = openai.Completion.create(engine="text-davinci-002", prompt=transcript, max_tokens=100)
-    response_text = response['choices'][0]['text']['content']
+    try:
+        response = openai.Completion.create(
+            engine="text-davinci-002",
+            prompt=text,
+            max_tokens=60
+        )
+        result_text = response.choices[0].text.strip()
+        logger.info(f"ChatGPT Response: {result_text}")
+    except Exception as e:
+        logger.error(f"Failed to get response from ChatGPT: {e}")
 
-    # Convert text to speech
-    tts = gTTS(response_text, lang='en')
-    tts.save("response.mp3")
-
-    # Play response
-    response_audio = AudioSegment.from_file("response.mp3")
-    play(response_audio)
+if __name__ == "__main__":
+    main()

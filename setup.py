@@ -9,6 +9,8 @@ setup(
     packages=find_packages(), 
     install_requires=[
         'sounddevice>=0.4.1',
+        'numpy>=1.25.0',
+        'scipy>=1.11.1',
         'google-cloud-speech>=2.7.0',
         'openai>=0.27.0',
         'gTTS>=2.2.3',
