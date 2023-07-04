@@ -9,11 +9,12 @@ import torch
 import os
 import pyttsx3
 
-from config import SPEECH_RATE
+from config import SPEECH_RATE, AUDIO_LISTEN_TIME
 
 class VoiceChatGPT:
 
     speech_rate = SPEECH_RATE
+    audio_listen_time = AUDIO_LISTEN_TIME
 
     def __init__(self):
         self.logger = logging.getLogger()
@@ -37,7 +38,7 @@ class VoiceChatGPT:
         default_input_device_info = sd.query_devices(default_devices[0])
         self.logger.info(f"Default input device: {default_input_device_info['name']}")
 
-    def record_audio(self, duration=10):
+    def record_audio(self, duration=audio_listen_time):
         try:
             self.logger.info("Recording audio...")
             self.recording = sd.rec(int(duration * 44100), samplerate=44100, channels=2)
@@ -133,7 +134,7 @@ class VoiceChatGPT:
                 if self.transcription is not None:
                     self.get_response_from_gpt()
                     if self.response is not None:
-                        #os.remove("recording.wav")
+                        os.remove("recording.wav")
                         self.text_to_speech(self.response)
                         return self.response
         return None
