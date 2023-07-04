@@ -10,16 +10,12 @@ setup(
     install_requires=[
         'sounddevice>=0.4.1',
         'numpy>=1.25.0',
-        'scipy>=1.11.1',
-        'google-cloud-speech>=2.7.0',
+        'scipy>=1.1.0',
         'openai>=0.27.0',
-        'gTTS>=2.2.3',
-        'pydub>=0.25.1',
-        'torch>=2.0.1',
-        'torchaudio>=2.0.2',
         'transformers>=4.30.2',
+        'torchaudio>=0.9.0',
+        'torch>=1.9.0',
         'pyttsx3>=2.90',
-        'noisereduce>=2.0.1'
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',
