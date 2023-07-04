@@ -9,7 +9,12 @@ import torch
 import os
 import pyttsx3
 
+from config import SPEECH_RATE
+
 class VoiceChatGPT:
+
+    speech_rate = SPEECH_RATE
+
     def __init__(self):
         self.logger = logging.getLogger()
         logging.basicConfig(level=logging.INFO)
@@ -112,9 +117,13 @@ class VoiceChatGPT:
             self.logger.error(f"Failed to get response from ChatGPT: {e}")
 
     def text_to_speech(self, text):
-        engine = pyttsx3.init()
-        engine.say(text)
-        engine.runAndWait()
+        try:
+            engine = pyttsx3.init()
+            engine.setProperty('rate', self.speech_rate)
+            engine.say(text)
+            engine.runAndWait()
+        except Exception as e:
+            self.logger.error(f"Failed to convert text to speech: {e}")
 
     def run(self):
         self.record_audio()
