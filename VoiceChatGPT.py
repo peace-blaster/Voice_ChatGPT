@@ -8,7 +8,6 @@ import torchaudio
 import torch
 import os
 import pyttsx4
-import platform
 
 from config import SPEECH_RATE, AUDIO_LISTEN_TIME, GPT_VERSION
 
