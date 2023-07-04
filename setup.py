@@ -14,7 +14,10 @@ setup(
         'google-cloud-speech>=2.7.0',
         'openai>=0.27.0',
         'gTTS>=2.2.3',
-        'pydub>=0.25.1'
+        'pydub>=0.25.1',
+        'torch>=2.0.1',
+        'torchaudi>=2.0.2',
+        'transformers>=4.30.2'
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',
