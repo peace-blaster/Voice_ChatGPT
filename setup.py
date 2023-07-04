@@ -16,7 +16,7 @@ setup(
         'gTTS>=2.2.3',
         'pydub>=0.25.1',
         'torch>=2.0.1',
-        'torchaudi>=2.0.2',
+        'torchaudio>=2.0.2',
         'transformers>=4.30.2',
         'pyttsx3>=2.90',
         'noisereduce>=2.0.1'

@@ -4,4 +4,4 @@
 brew update
 
 # Install non-python dependencies
-brew install portaudio ffmpeg # nsss should be included by default for Mac
+brew install portaudio ffmpeg python@3.11 # nsss should be included by default for Mac
