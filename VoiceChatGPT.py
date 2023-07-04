@@ -9,13 +9,14 @@ import torch
 import os
 import pyttsx4
 
-from config import SPEECH_RATE, AUDIO_LISTEN_TIME, GPT_VERSION
+from config import SPEECH_RATE, AUDIO_LISTEN_TIME, GPT_VERSION, SPEECH_TO_TEXT_MODEL
 
 class VoiceChatGPT:
 
     speech_rate = SPEECH_RATE
     audio_listen_time = AUDIO_LISTEN_TIME
     gpt_version = GPT_VERSION
+    s2t_model = SPEECH_TO_TEXT_MODEL
 
     def __init__(self):
         self.logger = logging.getLogger()
@@ -72,12 +73,11 @@ class VoiceChatGPT:
             return False
 
     def convert_speech_to_text(self, filepath):
-        print('is this even running?')
         self.logger.info("Converting speech to text...")
         try:
             # Load the pre-trained model and processor
-            processor = Wav2Vec2Processor.from_pretrained("facebook/wav2vec2-base-960h")
-            model = Wav2Vec2ForCTC.from_pretrained("facebook/wav2vec2-base-960h")
+            processor = Wav2Vec2Processor.from_pretrained(self.s2t_model)
+            model = Wav2Vec2ForCTC.from_pretrained(self.s2t_model)
 
             # Load audio
             speech, rate = torchaudio.load(filepath)
