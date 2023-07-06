@@ -16,6 +16,7 @@ setup(
         'torchaudio>=0.9.0',
         'torch>=1.9.0',
         'pyttsx3>=2.90',
+        'pyttsx4>=1.1' # for Mac support
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',

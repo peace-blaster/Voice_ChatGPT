@@ -7,14 +7,16 @@ from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
 import torchaudio
 import torch
 import os
-import pyttsx3
+import pyttsx4
 
-from config import SPEECH_RATE, AUDIO_LISTEN_TIME
+from config import SPEECH_RATE, AUDIO_LISTEN_TIME, GPT_VERSION, SPEECH_TO_TEXT_MODEL
 
 class VoiceChatGPT:
 
     speech_rate = SPEECH_RATE
     audio_listen_time = AUDIO_LISTEN_TIME
+    gpt_version = GPT_VERSION
+    s2t_model = SPEECH_TO_TEXT_MODEL
 
     def __init__(self):
         self.logger = logging.getLogger()
@@ -35,13 +37,27 @@ class VoiceChatGPT:
 
     def log_default_audio_device(self):
         default_devices = sd.default.device
-        default_input_device_info = sd.query_devices(default_devices[0])
-        self.logger.info(f"Default input device: {default_input_device_info['name']}")
+        devices = sd.query_devices()
+        for device in devices:
+            if device['name'] == default_devices[0]:
+                num_input_channels = device['max_input_channels']
+                self.logger.info(f"Default input device: {device['name']} (Channels: {num_input_channels})")
+                break
+        else:
+            self.logger.warning(f"Default input device '{default_devices[0]}' not found in available devices.")
 
     def record_audio(self, duration=audio_listen_time):
         try:
+            default_devices = sd.default.device
+            default_device_info = sd.query_devices(default_devices[0])
+            num_input_channels = default_device_info['max_input_channels']
+
             self.logger.info("Recording audio...")
-            self.recording = sd.rec(int(duration * 44100), samplerate=44100, channels=2)
+            self.recording = sd.rec(
+                int(duration * 44100),
+                samplerate=44100,
+                channels=num_input_channels
+            )
             sd.wait()
             self.logger.info("Audio recording successful")
         except Exception as e:
@@ -57,12 +73,11 @@ class VoiceChatGPT:
             return False
 
     def convert_speech_to_text(self, filepath):
-        print('is this even running?')
         self.logger.info("Converting speech to text...")
         try:
             # Load the pre-trained model and processor
-            processor = Wav2Vec2Processor.from_pretrained("facebook/wav2vec2-base-960h")
-            model = Wav2Vec2ForCTC.from_pretrained("facebook/wav2vec2-base-960h")
+            processor = Wav2Vec2Processor.from_pretrained(self.s2t_model)
+            model = Wav2Vec2ForCTC.from_pretrained(self.s2t_model)
 
             # Load audio
             speech, rate = torchaudio.load(filepath)
@@ -113,13 +128,12 @@ class VoiceChatGPT:
             )
             self.response = response.choices[0].text.strip()
             self.logger.info(f"ChatGPT Response: {self.response}")
-            print(f'ChatGPT: {self.response}')
         except Exception as e:
             self.logger.error(f"Failed to get response from ChatGPT: {e}")
 
     def text_to_speech(self, text):
         try:
-            engine = pyttsx3.init()
+            engine = pyttsx4.init()
             engine.setProperty('rate', self.speech_rate)
             engine.say(text)
             engine.runAndWait()
@@ -136,6 +150,4 @@ class VoiceChatGPT:
                     if self.response is not None:
                         os.remove("recording.wav")
                         self.text_to_speech(self.response)
-                        return self.response
-        return None
                 
