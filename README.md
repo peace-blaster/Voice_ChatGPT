@@ -19,3 +19,4 @@ PoC to use voice to communicate with ChatGPT
 ## Notes:
 - Will use default input and output audio devices
 - Tested on MacOS and Linux Fedora so far
+- Can produce odd responses from low quality audio samples
