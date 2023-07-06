@@ -128,7 +128,6 @@ class VoiceChatGPT:
             )
             self.response = response.choices[0].text.strip()
             self.logger.info(f"ChatGPT Response: {self.response}")
-            print(f'ChatGPT: {self.response}')
         except Exception as e:
             self.logger.error(f"Failed to get response from ChatGPT: {e}")
 
@@ -151,6 +150,4 @@ class VoiceChatGPT:
                     if self.response is not None:
                         os.remove("recording.wav")
                         self.text_to_speech(self.response)
-                        return self.response
-        return None
                 
