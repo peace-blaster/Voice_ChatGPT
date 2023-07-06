@@ -122,7 +122,7 @@ class VoiceChatGPT:
         self.logger.info("Getting response from ChatGPT...")
         try:
             response = openai.Completion.create(
-                engine="text-davinci-002",
+                engine=self.gpt_version,
                 prompt=self.transcription,
                 max_tokens=60
             )
