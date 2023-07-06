@@ -11,9 +11,11 @@ PoC to use voice to communicate with ChatGPT
 - Install non-pip dependencies (for connecting to audio devices on your system):
   - RHEL-based Linux:
     - `./fedora_setup.sh`
+  - MacOS:
+    - `./mac_setup.sh`
 - Install pip dependencies (you may want to make a `venv` first): `pip install .`
 - Put OpenAI token in root folder of repo as `openai_key` (don't worry, it's in `.gitignore`)
 
 ## Notes:
 - Will use default input and output audio devices
-- Only tested on Linux Fedora so far, Mac is next
+- Tested on MacOS and Linux Fedora so far
