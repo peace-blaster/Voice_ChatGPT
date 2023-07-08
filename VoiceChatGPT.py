@@ -150,4 +150,8 @@ class VoiceChatGPT:
                     if self.response is not None:
                         os.remove("recording.wav")
                         self.text_to_speech(self.response)
+
+if __name__ == '__main__':
+    VC = VoiceChatGPT()
+    VC.run()
                 
