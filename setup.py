@@ -15,6 +15,7 @@ setup(
         'transformers>=4.30.2',
         'torchaudio>=0.9.0',
         'torch>=1.9.0',
+        'pyaudio>=0.2.13',
         'pyttsx3>=2.90',
         'pyttsx4>=1.1' # for Mac support
     ],
